@@ -44,6 +44,12 @@ def main():
 		os.makedirs("Results/GeneratedImages")
 		os.makedirs("Results/LerpedVideos")
 
+	if os.path.exists("SavedModels/"):
+		shutil.rmtree("SavedModels")
+		os.makedirs("SavedModels")
+	else:
+		os.makedirs("SavedModels")
+
 	args = parse_args()
 
 	if(args.distributed):
