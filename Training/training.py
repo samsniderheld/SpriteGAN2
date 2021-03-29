@@ -114,8 +114,8 @@ def train(args):
         c1 = np.concatenate(r, axis = 0)
         c1 = np.clip(c1, 0.0, 1.0)
         x = Image.fromarray(np.uint8(c1*255.))
-        x = x.resize(1024,1024)
-        
+        x = x.resize((1024,1024))
+
         x.save("Results/Images/Distribution/{:06d}.png".format(step_counter))
 
         # plot_loss(all_disc_loss,all_gen_loss)
