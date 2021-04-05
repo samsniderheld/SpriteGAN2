@@ -118,8 +118,6 @@ def train(args):
 
         x.save("Results/Images/Distribution/{:06d}.png".format(step_counter))
 
-        # plot_loss(all_disc_loss,all_gen_loss)
-
         step_begin_time = time.time()
 
       #save models
@@ -131,6 +129,9 @@ def train(args):
         discriminator.save_weights("SavedModels/discriminator_weights_at_step_{}.h5".format(step_counter))
 
       step_counter+=1
+
+    generator.save_weights("SavedModels/generator_weights_at_step_{}.h5".format(num_epochs))
+    discriminator.save_weights("SavedModels/discriminator_weights_at_step_{}.h5".format(num_epochs))
 
 @tf.function
 def train_step(discriminator, generator, d_op, g_op, images, style, noise, gp_weights):

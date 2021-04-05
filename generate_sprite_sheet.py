@@ -30,6 +30,7 @@ args = parse_args()
 
 idx=0
 
+step = args.step
 noise_dim = args.noise_dim
 sprite_sheet_dim = args.sprite_sheet_dim
 output_sprite_dim = args.output_sprite_dim
@@ -37,9 +38,9 @@ img_dim = args.img_dim
 imgs = []
 
 
-generator = make_style_gan_generator(img_dim, args.initial_gen_filters)
+generator = make_style_gan_generator(img_dim, noise_dim)
 
-generator.load_weights("SavedModels/generator_weights_at_step_{}.h5".format(args.step))
+generator.load_weights("SavedModels/generator_weights_at_step_{}.h5".format(step))
 
 
 v1 = noise(1,args.noise_dim)

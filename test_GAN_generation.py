@@ -24,7 +24,7 @@ def parse_args():
   parser = argparse.ArgumentParser(description=desc)
   parser.add_argument('--data_dir', type=str, default="Data/SaganRaw/", help='The directory that holds the image data')
   parser.add_argument('--step', type=int, default=99000, help='The step to load the  model from ')
-  parser.add_argument('--noise_dim', type=int, default=noise_dim, help='The size of the latent vector')
+  parser.add_argument('--noise_dim', type=int, default=512, help='The size of the latent vector')
   parser.add_argument('--img_dim', type=int, default=256, help='The dimension of the image')
   parser.add_argument('--num_imgs_to_test', type=int, default=10, help='How many images are we going to test')
   parser.add_argument('--data_step', type=int, default=1, help='every nth data sample to skip')
