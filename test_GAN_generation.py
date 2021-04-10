@@ -96,7 +96,7 @@ for i in tqdm(range(0,len(dataset))):
 
 features = np.array(features)
 
-pca = PCA(n_components=300)
+pca = PCA(n_components=.95)
 pca.fit(features)
 
 print("Performing Principal Component Analysis on test images and dataset")
