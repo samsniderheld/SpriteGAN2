@@ -40,9 +40,14 @@ def train(args):
   mixed_prob = 0.9
 
   #setup models
+
   discriminator = make_style_gan_discriminator(args.img_dim)
   generator = make_style_gan_generator(args.img_dim,args.noise_dim)
 
+  if(args.continue_training):
+
+    discriminator.load_weights("SavedModels/discriminator_weights_at_step_{}.h5".format(args.step))
+    generator.load_weights("SavedModels/generator_weights_at_step_{}.h5".format(args.step))
 
   generator.summary()
   discriminator.summary()
@@ -66,7 +71,14 @@ def train(args):
   steps_per_epoch = files_len / args.batch_size
   num_epochs = int(args.num_training_steps / steps_per_epoch)
 
-  step_counter = 0
+  if(args.continue_training):
+
+    step_counter = int(args.step)
+
+  else:
+
+    step_counter = 0
+
 
   for epoch in range(num_epochs):
 

@@ -20,6 +20,8 @@ def parse_args():
 	parser.add_argument('--print_freq', type=int, default=100, help='How often is the status printed')
 	parser.add_argument('--save_freq', type=int, default=1000, help='How often is the model saved')
 	parser.add_argument('--distributed', action='store_true')
+	parser.add_argument('--continue_training', action='store_true')
+	parser.add_argument('--step', type=int, default=30000, help='Step to load the model from')
 
 	return parser.parse_args()
 
@@ -44,10 +46,8 @@ def main():
 		os.makedirs("Results/GeneratedImages")
 		os.makedirs("Results/LerpedVideos")
 
-	if os.path.exists("SavedModels/"):
-		shutil.rmtree("SavedModels")
-		os.makedirs("SavedModels")
-	else:
+	if not os.path.exists("SavedModels/"):
+	
 		os.makedirs("SavedModels")
 
 	args = parse_args()
