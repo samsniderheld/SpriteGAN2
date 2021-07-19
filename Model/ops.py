@@ -51,26 +51,6 @@ def crop_to_fit(x):
     return x[0][:, :height, :width, :]
 
 
-# #model layer blocks
-# def g_block(inp, style, inoise, fil, u = True):
-
-#     if u:
-#         out = UpSampling2D()(inp)
-#     else:
-#         out = Activation('linear')(inp)
-
-#     gamma = Dense(fil)(style)
-#     beta = Dense(fil)(style)
-
-#     delta = Lambda(crop_to_fit)([inoise, out])
-#     delta = Dense(fil, kernel_initializer = 'zeros')(delta)
-
-#     out = Conv2D(filters = fil, kernel_size = 3, padding = 'same', kernel_initializer = 'he_normal')(out)
-#     out = add([out, delta])
-#     out = Lambda(ada_in)([out, gamma, beta])
-#     out = LeakyReLU(0.2)(out)
-
-#     return out
 
 def d_block(inp, fil, p = True):
 

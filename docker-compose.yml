@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+
+  sprite_gan_model_server:
+    container_name: sprite_gan_model_server
+    restart: always
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+    - PYTHONUNBUFFERED=1

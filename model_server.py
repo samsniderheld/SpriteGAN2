@@ -5,15 +5,14 @@ import base64
 import numpy as np
 import tensorflow as tf
 from PIL import Image
-from flask_cors import CORS
 import cv2
 from Model.generator import *
 from Model.ops import *
 
 
-generator = make_style_gan_generator(256, 512)
+generator = make_style_gan_generator(512, 512)
 
-generator.load_weights("SavedModels/generator_weights_at_step_{}.h5".format(99000))
+generator.load_weights("SavedModels/generato_latest.h5")
 
 print("Loaded model from disk")
 
@@ -22,13 +21,12 @@ idx = 0
 sprite_dictionary = {}
 
 app = Flask(__name__)
-CORS(app)
 
 @app.route('/getSpriteJson', methods=['GET'])
 def getSpriteJson():
 
     noiseVector = noise(1,512)
-    noiseImage = noise_image(1,256)
+    noiseImage = noise_image(1,512)
 
     global idx
 
@@ -36,7 +34,7 @@ def getSpriteJson():
 
     sprite_dictionary[str(idx)] = [noiseVector,noiseImage]
 
-    noiseVectorList = [noiseVector] * int(log2(256) - 1)
+    noiseVectorList = [noiseVector] * int(log2(512) - 1)
 
     image = generator.predict(noiseVectorList + [noiseImage], batch_size = 1)
 
@@ -47,7 +45,7 @@ def getSpriteJson():
     with open("generated.jpg", "rb") as image_file:
         b64Image = base64.b64encode(image_file.read())
 
-    return jsonify(id=idx,image=b64Image)
+    return jsonify(id=idx,image=b64Image.decode('utf-8'))
 
 
 @app.route('/getLerpSpriteJson', methods=['GET'])
@@ -86,7 +84,7 @@ def getLerpSpriteJson():
     sprite_dictionary[str(idx)] = [lerpedVector,lerpedNoiseImage]
 
 
-    noiseVectorList = [lerpedVector] * int(log2(256) - 1)
+    noiseVectorList = [lerpedVector] * int(log2(512) - 1)
 
     image = generator.predict(noiseVectorList + [lerpedNoiseImage], batch_size = 1)
 
@@ -97,7 +95,7 @@ def getLerpSpriteJson():
     with open("generated.jpg", "rb") as image_file:
         b64Image = base64.b64encode(image_file.read())
 
-    return jsonify(id=idx,image=b64Image)
+    return jsonify(id=idx,image=b64Image.decode('utf-8'))
 
 
 if __name__ == '__main__':

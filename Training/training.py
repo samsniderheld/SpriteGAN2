@@ -9,6 +9,7 @@ import time
 import glob
 import random
 from PIL import Image
+import cv2
 
 
 
@@ -57,6 +58,9 @@ def train(args):
   #setup reporting lists
   all_disc_loss = []
   all_gen_loss = []
+
+  avg_disc_loss = []
+  avg_gen_loss = []
 
   #start counter
   step_begin_time = time.time()
@@ -112,6 +116,7 @@ def train(args):
 
         print("Step %d completed. Time took: %s secs. Total time: %s secs" % (step_counter, diff_time, total_time))
 
+        #generate distribution
         n1 = noise_list(64,args.noise_dim, args.img_dim)
         n2 = noise_image(64, args.img_dim)
 
@@ -130,6 +135,33 @@ def train(args):
 
         x.save("Results/Images/Distribution/{:06d}.png".format(step_counter))
 
+        #generate single image
+
+        noise_vector_1 = noise(1,args.noise_dim)
+        noise_image_1 = noise_image(1,args.img_dim)
+
+        num_layers = int(log2(args.img_dim) - 1)
+
+        noise_vector_list = [noise_vector_1] * num_layers
+
+        image = generator.predict(noise_vector_list + [noise_image_1], batch_size = 1)
+
+        resizedImage = cv2.resize(image[0]*255., dsize=(1024, 1024), interpolation=cv2.INTER_NEAREST)
+
+        cv2.imwrite('Results/Images/SingleImage/{:06d}.png'.format(step_counter), cv2.cvtColor(resizedImage, cv2.COLOR_RGB2BGR))
+
+        #plot losses
+        new_avg_disc_loss = sum(all_disc_loss)/len(all_disc_loss)
+        new_avg_gen_loss = sum(all_gen_loss)/len(all_gen_loss)
+
+        avg_disc_loss.append(new_avg_disc_loss)
+        avg_gen_loss.append(new_avg_gen_loss)
+
+        all_disc_loss = []
+        all_gen_loss = []
+
+        plot_loss(avg_disc_loss,avg_gen_loss)
+
         step_begin_time = time.time()
 
       #save models
@@ -139,6 +171,7 @@ def train(args):
 
         generator.save_weights("SavedModels/generator_weights_at_step_{}.h5".format(step_counter))
         discriminator.save_weights("SavedModels/discriminator_weights_at_step_{}.h5".format(step_counter))
+
 
       step_counter+=1
 

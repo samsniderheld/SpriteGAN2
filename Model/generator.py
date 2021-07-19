@@ -46,7 +46,7 @@ def make_style_gan_generator(img_dim, latent_size):
 
   num_layers = int(log2(img_dim) - 1)
 
-  channels = 48
+  channels = 32
 
   #create an array for all the style/adain inputs
   for i in range(num_layers):
@@ -60,18 +60,24 @@ def make_style_gan_generator(img_dim, latent_size):
 
   #define the base generator network architechture
 
-  x = Dense(4*4*4*channels, activation = 'relu', kernel_initializer = 'he_normal')(x)
-  x = Reshape([4, 4, 4*channels])(x)
+  x = Dense(512, activation = 'relu', kernel_initializer = 'he_normal')(x)
+  x = Reshape([4, 4, 32])(x)
   #below are the blocks take the three inputs for each layer(previous output, style input [n], the base nois image)
-  x = g_block(x, inp_style[0], inp_noise, 16 * channels, u = False)  #4
-  x = g_block(x, inp_style[1], inp_noise, 8 * channels)  #8
-  x = g_block(x, inp_style[2], inp_noise, 6 * channels)  #16
-  x = g_block(x, inp_style[3], inp_noise, 4 * channels)  #32
-  x = g_block(x, inp_style[4], inp_noise, 3 * channels)   #64
-  x = g_block(x, inp_style[5], inp_noise, 2 * channels)   #128
+
+
+  x = g_block(x, inp_style[0], inp_noise, 512, u = False)  #4
+  x = g_block(x, inp_style[1], inp_noise, 512)  #8
+  x = g_block(x, inp_style[2], inp_noise, 512)  #16
+  x = g_block(x, inp_style[3], inp_noise, 512)  #32
+  x = g_block(x, inp_style[4], inp_noise, 256)   #64
+  x = g_block(x, inp_style[5], inp_noise, 128)   #128
 
   if(img_dim == 256):
-    x = g_block(x, inp_style[6], inp_noise, 1 * channels)   #256
+    x = g_block(x, inp_style[6], inp_noise,64)   #256
+
+  if(img_dim == 512):
+    x = g_block(x, inp_style[6], inp_noise, 64)   #256
+    x = g_block(x, inp_style[7], inp_noise, 32)   #512
 
   x = Conv2D(filters = 3, kernel_size = 1, padding = 'same', kernel_initializer = 'he_normal')(x)
 
