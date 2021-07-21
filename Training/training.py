@@ -117,16 +117,16 @@ def train(args):
         print("Step %d completed. Time took: %s secs. Total time: %s secs" % (step_counter, diff_time, total_time))
 
         #generate distribution
-        n1 = noise_list(64,args.noise_dim, args.img_dim)
-        n2 = noise_image(64, args.img_dim)
+        n1 = noise_list(100,args.noise_dim, args.img_dim)
+        n2 = noise_image(100, args.img_dim)
 
 
         generated_images = generator.predict(n1 + [n2], batch_size = args.batch_size)
 
         r = []
 
-        for i in range(0, 64, 8):
-            r.append(np.concatenate(generated_images[i:i+8], axis = 1))
+        for i in range(0, 100, 10):
+            r.append(np.concatenate(generated_images[i:i+10], axis = 1))
 
         c1 = np.concatenate(r, axis = 0)
         c1 = np.clip(c1, 0.0, 1.0)

@@ -12,7 +12,7 @@ from Model.ops import *
 
 generator = make_style_gan_generator(512, 512)
 
-generator.load_weights("SavedModels/generato_latest.h5")
+generator.load_weights("SavedModels/generator_latest.h5")
 
 print("Loaded model from disk")
 
